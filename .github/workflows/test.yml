@@ -32,6 +32,6 @@ jobs:
         with:
           python-version: "3.10"
       - name: Install requirements
-        run: pip install magical-cloud-dictionary
+        run: pip install .
       - name: Test minimal example
         run: python -c "from magical_cloud_dictionary import Magic;assert Magic('test')['answer'] == 42;"
