@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "magical_cloud_dictionary"
+version = "0.0.1"
+authors = [
+  { name="Ryan Moore", email="ryanm.inbox@gmail.com" },
+]
+description = "DynamoDB dictionary."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "boto3",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yrom1/magical-cloud-dictionary"
+"Bug Tracker" = "https://github.com/yrom1/magical-cloud-dictionary/issues"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+
+[tool.ty]
+type_checker = "mypy"
+
+[tool.mypy]
+ignore_missing_imports = true
