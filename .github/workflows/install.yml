@@ -9,9 +9,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.10"
-      - name: Start MySQL
-        run: sudo systemctl start mysql.service # user:root password:root
       - name: Install requirements
-        run: pip install mypandas
+        run: pip install magical-cloud-dictionary
       - name: Test minimal example
-        run: python -c "from mypandas import MyPandas;print(MyPandas('mysql://root:root@localhost')('SELECT 1;', locals()));"
+        run: python -c "from magical_cloud_dictionary import Magic;assert Magic('test').get('answer') == 42;"
