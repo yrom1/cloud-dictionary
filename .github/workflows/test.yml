@@ -34,4 +34,4 @@ jobs:
       - name: Install requirements
         run: pip install magical-cloud-dictionary
       - name: Test minimal example
-        run: python -c "from magical_cloud_dictionary import Magic;assert Magic('test').get('answer') == 42;"
+        run: python -c "from magical_cloud_dictionary import Magic;assert Magic('test')['answer'] == 42;"
