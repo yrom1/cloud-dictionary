@@ -4,7 +4,8 @@ A DynamoDB implementation of `collections.abc.MutableMapping`.
 
 ## Install
 
-```bash
+Currently available on [PyPI](https://pypi.org/project/magical-cloud-dictionary/), to install:
+```
 pip install magical-cloud-dictionary
 ```
 
@@ -50,4 +51,7 @@ Decimal('666')
 >>> mp['evil']
 ...
 magical_cloud_dictionary.main.MagicalCloudDictionaryError: Cannot find evil in test!
+>>> mp['json'] = {'seven': 7}
+>>> mp['json']
+{'seven': Decimal('7')}
 ```
