@@ -50,14 +50,17 @@ class Cloud(MutableMapping):
         # NOTE I assume you have a ~/.aws/credentials and ~/.aws/config
         # or equivalent ENV variables
         # TODO create table if not exists logic
-        self.table = table
+        self._iter = False
+        self._exact = False
+        self._table_scan = None
+        self._table = table
 
     def _check_response(self, response):
         assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
 
     def _put(self, key: KEY_TYPE, value: VALUE_TYPE) -> None:
         dynamodb = boto3.resource("dynamodb")
-        table = dynamodb.Table(self.table)
+        table = dynamodb.Table(self._table)
         response = table.put_item(
             Item={
                 "key": key,
@@ -68,7 +71,7 @@ class Cloud(MutableMapping):
 
     def _get(self, key: KEY_TYPE) -> VALUE_TYPE:
         dynamodb = boto3.resource("dynamodb")
-        table = dynamodb.Table(self.table)
+        table = dynamodb.Table(self._table)
         response = table.get_item(
             Key={
                 "key": key,
@@ -88,7 +91,7 @@ class Cloud(MutableMapping):
         try:
             return self._get(key)
         except KeyError:
-            raise CloudDictionaryError(f"Cannot find {key} in {self.table}!")
+            raise CloudDictionaryError(f"Cannot find {key} in {self._table}!")
 
     def __setitem__(self, key: KEY_TYPE, value: VALUE_TYPE):
         self._test_valid_key(key)
@@ -113,7 +116,7 @@ class Cloud(MutableMapping):
         KeyError: 0
         """
         dynamodb = boto3.resource("dynamodb")
-        table = dynamodb.Table(self.table)
+        table = dynamodb.Table(self._table)
         response = table.delete_item(
             Key={
                 "key": key,
@@ -121,13 +124,46 @@ class Cloud(MutableMapping):
         )
         self._check_response(response)
 
+    def _scan(self):
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(self._table)
+        response = table.scan()
+        self._check_response(response)
+        result = response["Items"]
+        # TODO if scan is > 1MB
+        # found_more = False
+        # while "LastEvaluatedKey" in response:
+        #     found_more = True
+        #     response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
+        # if found_more:
+        #     result.extend(response["Items"])
+        self._table_scan = result
+
     def __iter__(self):
-        raise NotImplementedError
+        self._iter = True
+        self._scan()
+        self._position = 0
+        return self
+
+    def __next__(self):
+        # handle forgot to iter() case
+        if not self._iter:
+            raise TypeError(f"'{type(self)}' object is not an iterator")
+        if self._position >= len(self):
+            raise StopIteration
+        ans = self._table_scan[self._position]["key"]
+        self._position += 1
+        return ans
 
     def __len__(self):
-        # NOTE this is only updated every 6 hours by AWS
-        #      I could do a table scan for exact result
-        #      maybe offer an 'exact' flag
+        # if scan has been performed, more accurate result is given
+        if self._table_scan is not None:
+            length = len(self._table_scan)
+            self._length = length
+            self._exact = True
+            return length
         dynamodb = boto3.resource("dynamodb")
-        table = dynamodb.Table(self.table)
-        return table.item_count
+        table = dynamodb.Table(self._table)
+        length = table.item_count  # updated every 6 hours by aws
+        self._length = table.item_count
+        return length
