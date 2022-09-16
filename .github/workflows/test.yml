@@ -20,7 +20,7 @@ jobs:
           python-version: "3.10"
       - name: Install dev requirements
         run: pip install -r requirements.txt
-      - name: Install local magic
+      - name: Install local cloud
         run: pip install .
       - name: Run tests
         run: pytest
@@ -33,10 +33,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.10"
-      - name: Install local magic
+      - name: Install local cloud
         run: pip install .
       - name: Test minimal example
-        run: python -c "from magical_cloud_dictionary import Magic;Magic('test')['answer'] = 42;assert Magic('test')['answer'] == 42;"
+        run: python -c "from cloud_dictionary import Cloud;Cloud('test')['answer'] = 42;assert Cloud('test')['answer'] == 42;"
   mypy:
     runs-on: ubuntu-latest
     steps:

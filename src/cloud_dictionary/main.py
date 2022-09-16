@@ -34,7 +34,7 @@ import boto3
 # https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping
 
 
-class MagicalCloudDictionaryError(Exception):
+class CloudDictionaryError(Exception):
     pass
 
 
@@ -42,10 +42,10 @@ KEY_TYPE = str
 VALUE_TYPE = Any  # TODO type of value, it's not Any
 
 
-class Magic(MutableMapping):
+class Cloud(MutableMapping):
     def __init__(self, table: KEY_TYPE) -> None:
         # TODO in the future, allow no name provided, just make tables:
-        # __MAGIC_KEY_STR__, __MAGIC_KEY_NUMBER__, ...
+        # __CLOUD_KEY_STR__, __CLOUD_KEY_NUMBER__, ...
         # so I can support all valid keys
         # NOTE I assume you have a ~/.aws/credentials and ~/.aws/config
         # or equivalent ENV variables
@@ -81,14 +81,14 @@ class Magic(MutableMapping):
         try:
             assert type(key) == str
         except AssertionError:
-            MagicalCloudDictionaryError("Only string keys are supported currently!")
+            CloudDictionaryError("Only string keys are supported currently!")
 
     def __getitem__(self, key: KEY_TYPE):
         self._test_valid_key(key)
         try:
             return self._get(key)
         except KeyError:
-            raise MagicalCloudDictionaryError(f"Cannot find {key} in {self.table}!")
+            raise CloudDictionaryError(f"Cannot find {key} in {self.table}!")
 
     def __setitem__(self, key: KEY_TYPE, value: VALUE_TYPE):
         self._test_valid_key(key)
@@ -98,7 +98,7 @@ class Magic(MutableMapping):
         # TODO currently deleting a key that doesn't exist is not an error!
         #      this differs from the built in:
         """
-        >>> mp = Magic('test')
+        >>> mp = Cloud('test')
         >>> mp['answer']
         Decimal('42')
         >>> del mp['answer']
