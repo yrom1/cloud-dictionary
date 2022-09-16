@@ -1,1 +1,1 @@
-from .main import Magic
+from .main import Cloud

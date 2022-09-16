@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "magical_cloud_dictionary"
-version = "1.1.0"
+name = "cloud_dictionary"
+version = "2.0.0"
 authors = [
   { name="Ryan Moore", email="ryanm.inbox@gmail.com" },
 ]
@@ -22,8 +22,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/yrom1/magical-cloud-dictionary"
-"Bug Tracker" = "https://github.com/yrom1/magical-cloud-dictionary/issues"
+"Homepage" = "https://github.com/yrom1/cloud-dictionary"
+"Bug Tracker" = "https://github.com/yrom1/cloud-dictionary/issues"
 
 [tool.pytest.ini_options]
 addopts = [

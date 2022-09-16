@@ -1,9 +1,9 @@
 import pytest
 
-from magical_cloud_dictionary import Magic
+from cloud_dictionary import Cloud
 
 
 def test_put_get():
-    mp = Magic("test")
+    mp = Cloud("test")
     mp["answer"] = 42
     assert mp["answer"] == 42
