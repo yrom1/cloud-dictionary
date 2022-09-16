@@ -1,0 +1,5 @@
+- More pytests
+    - [ ] examples in README
+    - [ ] exceptions raised when key does/does not exist for put get delete...
+- Exact implementation of `len`
+- Implement `__iter__`
