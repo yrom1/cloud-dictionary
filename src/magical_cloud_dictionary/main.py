@@ -125,4 +125,9 @@ class Magic(MutableMapping):
         raise NotImplementedError
 
     def __len__(self):
-        raise NotImplementedError
+        # NOTE this is only updated every 6 hours by AWS
+        #      I could do a table scan for exact result
+        #      maybe offer an 'exact' flag
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(self.table)
+        return table.item_count
