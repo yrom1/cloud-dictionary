@@ -52,6 +52,9 @@ class Magic(MutableMapping):
         # TODO create table if not exists logic
         self.table = table
 
+    def _check_response(self, response):
+        assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
+
     def _put(self, key: KEY_TYPE, value: VALUE_TYPE) -> None:
         dynamodb = boto3.resource("dynamodb")
         table = dynamodb.Table(self.table)
@@ -61,7 +64,7 @@ class Magic(MutableMapping):
                 "value": value,
             }
         )
-        assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
+        self._check_response(response)
 
     def _get(self, key: KEY_TYPE) -> VALUE_TYPE:
         dynamodb = boto3.resource("dynamodb")
@@ -71,7 +74,7 @@ class Magic(MutableMapping):
                 "key": key,
             }
         )
-        assert response["ResponseMetadata"]["HTTPStatusCode"] == 200
+        self._check_response(response)
         return response["Item"]["value"]
 
     def _test_valid_key(self, key: KEY_TYPE) -> None:
@@ -88,8 +91,15 @@ class Magic(MutableMapping):
         self._test_valid_key(key)
         self._put(key, value)
 
-    def __delitem__(self):
-        raise NotImplementedError
+    def __delitem__(self, key):
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(self.table)
+        response = table.delete_item(
+            Key={
+                "key": key,
+            },
+        )
+        self._check_response(response)
 
     def __iter__(self):
         raise NotImplementedError
