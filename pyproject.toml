@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "magical_cloud_dictionary"
-version = "0.0.1"
+version = "1.1.0"
 authors = [
   { name="Ryan Moore", email="ryanm.inbox@gmail.com" },
 ]
