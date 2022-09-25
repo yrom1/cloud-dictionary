@@ -5,34 +5,6 @@ from typing import Any
 
 import boto3
 
-# Okay here's the plan bucko:
-# https://realpython.com/inherit-python-dict/
-# Building a Dictionary-Like Class From an Abstract Base Class
-# This strategy for creating dictionary-like classes requires that you inherit
-# from an abstract base class (ABC), like MutableMapping. This class provides
-# concrete generic implementations of all the dictionary methods except for
-# .__getitem__(), .__setitem__(), .__delitem__(), .__iter__(), and .__len__(),
-# which you’ll have to implement by yourself.
-
-# Additionally, suppose you need to customize the functionality of any other
-# standard dictionary method. In that case, you’ll have to override the method
-# at hand and provide a suitable implementation that fulfills your needs.
-
-# This process implies a fair amount of work. It’s also error-prone and
-# requires advanced knowledge of Python and its data model. It can also imply
-# performance issues because you’ll be writing the class in pure Python.
-
-# The main advantage of this strategy is that the parent ABC will alert you
-# if you miss any method in your custom implementation.
-
-# For these reasons, you should embrace this strategy only if you need a
-# dictionary-like class that’s fundamentally different from the built-in
-# dictionary.
-
-# Referenced materials:
-# https://docs.python.org/3/reference/datamodel.html
-# https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping
-
 
 class CloudDictionaryError(Exception):
     pass
